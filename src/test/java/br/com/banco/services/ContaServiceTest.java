@@ -1,6 +1,9 @@
 package br.com.banco.services;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -12,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import br.com.banco.dao.ContaDAO;
+import br.com.banco.dto.TransferenciaDTO;
 import br.com.banco.exceptions.BancoNotFoundException;
 import br.com.banco.models.ContaModel;
+import br.com.banco.models.TransferenciaModel;
 import br.com.banco.utils.TesteUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,7 +38,10 @@ public class ContaServiceTest {
 	@InjectMocks
 	private ContaService contaService;
 	
+	private ModelMapper mapper = new ModelMapper();
+	
 	ContaModel conta = TesteUtils.buildConta();
+	TransferenciaModel transf = TesteUtils.buildTransferencia();
 	
 	
 	
@@ -88,5 +97,28 @@ public class ContaServiceTest {
 		
 		
 	}
+	
+	
+	
+	
+	// ==================== [ TRANSACOES ] ====================
+	
+	@Test
+	void whenTheMethodTransacaoIsCalled_ThenATrabsacaoIsCreated() throws BancoNotFoundException {
+		
+		when(this.contaDAO.findById(Mockito.anyLong()))
+			.thenReturn(Optional.of(this.conta));
+		
+		when(this.contaDAO.save(Mockito.any(ContaModel.class)))
+			.thenReturn(this.conta);
+		
+		this.contaService.transacao(this.conta.getIdConta(), this.mapper.map(this.transf, TransferenciaDTO.class));
+		
+		verify(this.contaDAO, times(1)).findById(1L);
+		verify(this.contaDAO, times(1)).save(this.conta);
+		
+		
+	}
+	
 
 }

@@ -3,6 +3,7 @@ package br.com.banco.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class ContaModel {
 	private String nomeResponsavel;
 	
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "conta_id")
 	private List<TransferenciaModel> transferencia = new ArrayList<>();
 

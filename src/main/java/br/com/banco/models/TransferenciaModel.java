@@ -32,4 +32,7 @@ public class TransferenciaModel {
 	@Column(name = "nome_operador_transacao", length = 50, nullable = false)
 	private String nomeOperadorTransacao;
 	
+	@Column(name = "conta_id",nullable = false)
+	private Long contaId;
+	
 }

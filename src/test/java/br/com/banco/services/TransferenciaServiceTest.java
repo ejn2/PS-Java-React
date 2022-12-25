@@ -1,6 +1,7 @@
 package br.com.banco.services;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -36,12 +37,15 @@ public class TransferenciaServiceTest {
 	
 	private TransferenciaModel transferenciaModel = TesteUtils.buildTransferencia();
 	
+	String startDate = "2019-01-01T07:00:00";
+	String endDate = "2019-05-04T02:12:40";
+	
 	
 	
 	// ==================== [ FIND ALL - TEST ] ==================== 
 	
 	@Test
-	void whenTheMethodFindAllIsCalled_ThenAListOfContaIsReturned() {
+	void whenTheMethodFindAllIsCalled_ThenAListOfTrnasferenciaIsReturned() {
 		
 		Pageable pageable = PageRequest.of(0, 3);
 		
@@ -60,9 +64,7 @@ public class TransferenciaServiceTest {
 	}
 	
 	
-	
-	
-	
+
 	// ==================== [ FIND BY NAME- TEST ] ==================== 
 	
 

@@ -45,6 +45,8 @@ public class ContaControllerTest {
 	
 	
 	
+	// ==================== [ FIND ALL ] ====================
+	
 	@Test
 	void findAllContaTest() throws Exception {
 		
@@ -54,6 +56,22 @@ public class ContaControllerTest {
 		this.mockMvc.perform(get(this.API_URL))
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.content[0].transferencia[0].dataTransferencia", is("2019-01-01T07:00:00")));
+		
+	}
+	
+	
+	
+	// ==================== [ FIND BY ID ] ====================
+	
+	@Test
+	void findByContaNumeroTest() throws Exception {
+		
+		when(this.contaService.findByContaNumero(Mockito.anyLong()))
+			.thenReturn(this.conta);
+			
+		this.mockMvc.perform(get(this.API_URL + String.format("/%d", this.conta.getIdConta())))
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("$.nomeResponsavel", is("Fulano")));
 		
 	}
 	

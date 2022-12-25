@@ -1,9 +1,10 @@
 package br.com.banco.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import br.com.banco.dao.ContaDAO;
+import br.com.banco.exceptions.BancoNotFoundException;
 import br.com.banco.models.ContaModel;
 import br.com.banco.utils.TesteUtils;
 
@@ -34,7 +36,7 @@ public class ContaServiceTest {
 	
 	
 	
-	// ==================== [ FID ALL - TEST ] ==================== 
+	// ==================== [ FIND ALL - TEST ] ==================== 
 	
 	@Test
 	void whenTheMethodFindAllIsCalled_ThenAListOfContaIsReturned() {
@@ -50,6 +52,40 @@ public class ContaServiceTest {
 		assertEquals(this.conta.getIdConta(), listOfConta.getContent().get(0).getIdConta());
 		
 		assertEquals(1, listOfConta.getTotalPages());
+		
+	}
+	
+	
+	
+	
+	// ==================== [ FIND BY ID ] ====================
+	
+	@Test
+	void whenTheMethodFindByContaNumeroIsCalled_ThenAContaIsReturned() throws BancoNotFoundException {
+		
+		
+		when(this.contaDAO.findById(Mockito.anyLong()))
+			.thenReturn(Optional.of(this.conta));
+		
+		ContaModel foundConta = this.contaService.findByContaNumero(this.conta.getIdConta());
+		
+		assertEquals(this.conta.getIdConta(), foundConta.getIdConta());
+		assertEquals(this.conta.getNomeResponsavel(), foundConta.getNomeResponsavel());
+		
+		
+	}
+	
+	
+	@Test
+	void whenTheMethodFindByContaNumeroIsCalledWithInvalidId_ThenAnExceptionIsThrown() throws BancoNotFoundException {
+		
+		
+		when(this.contaDAO.findById(Mockito.anyLong()))
+			.thenReturn(Optional.empty());
+		
+		assertThrows(BancoNotFoundException.class,
+				() -> this.contaService.findByContaNumero(this.conta.getIdConta()));
+		
 		
 	}
 

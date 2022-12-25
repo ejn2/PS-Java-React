@@ -28,7 +28,7 @@ public class HandlerExceptions extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(BancoNotFoundException.class)
 	public ResponseEntity<Object> handleBancoNotFoundException(BancoNotFoundException ex) {
-		return new ResponseEntity<>(new DefaultException(ex.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new DefaultException(ex.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
 		
 	}
 	

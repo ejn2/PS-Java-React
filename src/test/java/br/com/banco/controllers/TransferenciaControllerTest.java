@@ -3,6 +3,7 @@ package br.com.banco.controllers;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import br.com.banco.constrollers.TransferenciaController;
 import br.com.banco.dao.TransferenciaDAO;
+import br.com.banco.exceptions.BancoNotFoundException;
 import br.com.banco.models.TransferenciaModel;
 import br.com.banco.services.TransferenciaService;
 import br.com.banco.utils.TesteUtils;
@@ -55,9 +57,37 @@ public class TransferenciaControllerTest {
 		
 		this.mockMvc.perform(get(this.API_URL))
 			.andExpect(status().isOk())
-			.andExpect(MockMvcResultMatchers.jsonPath("$.content[0].dataTransferencia", is("2019-01-01T07:00:00")))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.content[0].tipo", is("TRANSFERENCIA")));
+			.andExpect(jsonPath("$.content[0].dataTransferencia", is("2019-01-01T07:00:00")))
+			.andExpect(jsonPath("$.content[0].tipo", is("TRANSFERENCIA")));
 		
+		
+		
+	}
+	
+	// ==================== [ FIND BY NAME- TEST ] ==================== 
+	
+	@Test
+	void findByValidNameOperadorTest() throws Exception {
+		
+		when(this.transferenciaService.findByName(Mockito.anyString()))
+			.thenReturn(transferenciaModel);
+		
+		this.mockMvc.perform(get(String.format("%s/%s", this.API_URL, this.transferenciaModel.getNomeOperadorTransacao())))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.nomeOperadorTransacao", is(this.transferenciaModel.getNomeOperadorTransacao())));
+		
+		
+	}
+	
+	
+	@Test
+	void findByInvalidNameOperadorTest() throws Exception {
+		
+		when(this.transferenciaService.findByName(Mockito.anyString()))
+			.thenThrow(BancoNotFoundException.class);
+		
+		this.mockMvc.perform(get(String.format("%s/%s", this.API_URL, "invalidNameExample")))
+			.andExpect(status().isNotFound());
 		
 		
 	}

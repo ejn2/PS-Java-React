@@ -26,6 +26,7 @@ public abstract class TesteUtils {
 		transferenciaModel.setDataTransferencia(LocalDateTime.of(2019, 1, 1, 7, 0));
 		transferenciaModel.setTipo("TRANSFERENCIA");
 		transferenciaModel.setValor(3241.23);
+		transferenciaModel.setNomeOperadorTransacao("Beltrano");
 		
 		return transferenciaModel;
 		

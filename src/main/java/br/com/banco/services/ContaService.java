@@ -28,7 +28,7 @@ public class ContaService {
 	public ContaModel findByContaNumero(Long id) throws BancoNotFoundException {
 		
 		return this.contaDAO.findById(id)
-			.orElseThrow(() -> new BancoNotFoundException("Numero da conta inesistente."));
+			.orElseThrow(() -> new BancoNotFoundException("Numero da conta inexistente."));
 		
 	}
 	
